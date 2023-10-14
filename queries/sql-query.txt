@@ -39,5 +39,11 @@ ADD CONSTRAINT fk_customer
 FOREIGN KEY (customer_id)
 REFERENCES tb_customers(customer_id);
 
-4.d
 
+4.d.
+
+SELECT *
+FROM tb_customers C
+JOIN tb_transactions T
+ON C.customer_id = T.customer_id
+WHERE C.customer_id = '1002';
