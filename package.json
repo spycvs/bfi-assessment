@@ -1,0 +1,29 @@
+{
+  "name": "bfi-assessment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest --detectOpenHandles"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spycvs/bfi-assessment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spycvs/bfi-assessment/issues"
+  },
+  "homepage": "https://github.com/spycvs/bfi-assessment#readme",
+  "dependencies": {
+    "jest": "^29.7.0",
+    "jest-html-reporter": "^3.10.2",
+    "jest-puppeteer": "^9.0.1",
+    "puppeteer": "^21.3.8"
+  }
+}

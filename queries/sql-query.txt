@@ -1,0 +1,43 @@
+4.a. 
+
+CREATE TABLE tb_transactions (
+	transaction_id INT PRIMARY KEY,
+	product_id INT,
+	customer_id INT,
+	Amount DECIMAL(10, 2),
+	Timestamp TIMESTAMP
+);
+
+CREATE TABLE tb_customers (
+	customer_id INT PRIMARY KEY,
+	fname VARCHAR(255),
+	address VARCHAR(255)
+);
+
+INSERT INTO tb_transactions (transaction_id, product_id, customer_id, Amount, Timestamp)
+VALUES (1, 101, 1001, 50.00, '2023-06-01 10:00:00'),
+	(2, 102, 1002, 75.00, '2023-06-02 11:30:00'),
+	(3, 105, 1005, 30.00, '2023-06-10 15:45:00');
+
+INSERT INTO tb_customers (customer_id, fname, address)
+VALUES (1001, 'Jon Snow', 'Winterfell Northern Realm, Westeros'),
+	(1002, 'John Doe', 'Kings Landing, Westeros'),
+	(1003, 'Karen Shade', 'Riverrun, Westeros');
+
+
+4.b.
+
+SELECT AVG(Amount) AS average_sales
+FROM tb_transactions
+WHERE Timestamp >= '2023-06-01' AND Timestamp <= '2023-06-02';
+
+
+4.c.
+
+ALTER TABLE tb_transactions
+ADD CONSTRAINT fk_customer
+FOREIGN KEY (customer_id)
+REFERENCES tb_customers(customer_id);
+
+4.d
+
