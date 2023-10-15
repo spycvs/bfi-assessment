@@ -1,18 +1,35 @@
+const puppeteer = require("puppeteer");
+
+let browser;
+let page;
+
 beforeAll(async () => {
-  await page.goto("http://94.237.65.245:4012/login");
+  browser = await puppeteer.launch({
+    headless: false,
+  });
+  page = await browser.newPage();
+});
+
+afterAll(async () => {
+  await browser.close();
 });
 
 describe("Login Page", () => {
-  it("should trigger validation when required input is empty", async () => {
-    const emailInputSelector =
-      'input[type="text"][placeholder="email@example.com"]';
+  const emailInputSelector =
+    'input[type="text"][placeholder="email@example.com"]';
+  const passwordInputSelector =
+    'input[type="password"][placeholder="At least 8 characters"].form-control.form-control-lg';
+  const loginButtonSelector = 'button[type="submit"]';
 
-    await page.type(
-      'input[type="password"][placeholder="At least 8 characters"].form-control.form-control-lg',
-      "password1234"
-    );
+  it("should trigger validation when required input field is empty", async () => {
+    await page.goto("http://94.237.65.245:4012/");
 
-    await page.click('button[type="submit"]');
+    await page.click('a[href="/login"]');
+    await page.waitForTimeout(2000);
+
+    await page.type(passwordInputSelector, "password1234");
+
+    await page.click(loginButtonSelector);
 
     await page.waitForSelector(emailInputSelector + ":invalid");
 
@@ -22,26 +39,24 @@ describe("Login Page", () => {
       (input) => input.validationMessage
     );
 
-    await expect(errorMessageText).toBe("Please fill out this field.");
-  });
+    //Expect error message
+    expect(errorMessageText).toBe("Please fill out this field.");
+  }, 100000);
 
   it("should fill out the login form and submit", async () => {
+    await page.goto("http://94.237.65.245:4012/");
+
+    await page.click('a[href="/login"]');
+    await page.waitForTimeout(2000);
+
     await expect(page.title()).resolves.toMatch("Lou Geh Car Dealership");
-    await page.type(
-      'input[type="text"][placeholder="email@example.com"].form-control.form-control-lg',
-      "test@gmail.com"
-    );
+    await page.type(emailInputSelector, "test@gmail.com");
+    await page.type(passwordInputSelector, "password1234");
+    await page.click(loginButtonSelector);
 
-    await page.type(
-      'input[type="password"][placeholder="At least 8 characters"].form-control.form-control-lg',
-      "password1234"
-    );
+    await page.waitForNavigation({ waitUntil: "domcontentloaded" });
 
-    await page.click('button[type="submit"]');
-
-    await page.waitForNavigation({
-      url: "http://94.237.65.245:4012/dashboard",
-    });
+    const currentUrl = page.url();
 
     await page.waitForSelector("h2[data-v-068b70d9]");
 
@@ -49,6 +64,9 @@ describe("Login Page", () => {
       "h2[data-v-068b70d9]",
       (element) => element.textContent
     );
-    await expect(text).toContain("Dashboard");
-  }, 30000);
+
+    //Expect that current page is in dashboard
+    expect(currentUrl).toBe("http://94.237.65.245:4012/dashboard");
+    expect(text).toContain("Dashboard");
+  }, 45000);
 });
